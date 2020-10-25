@@ -123,6 +123,10 @@ glm::vec2 Box::getCurrentDirection() const
 {
 	return m_currentDirection;
 }
+float Box::getCurrentHeading() const
+{
+	return m_currentHeading;
+}
 
 float Box::getMaxSpeed() const
 {

@@ -26,6 +26,7 @@ public:
 	// getters
 	glm::vec2 getTargetPosition() const;
 	glm::vec2 getCurrentDirection() const;
+	float getCurrentHeading() const;
 	float getMaxSpeed() const;
 
 	// setters

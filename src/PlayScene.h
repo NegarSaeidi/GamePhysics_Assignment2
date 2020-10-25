@@ -34,6 +34,15 @@ private:
 	float groundFriction, rampFriction, mass;
 	bool m_playerFacingRight;
 	Box* m_pBox;
+	Label* staticKey[4];
+	std::string xPosStr;
+	std::string yPosStr;
+	std::string velMagStr;
+	std::string fForceStr;
+	float xPos;
+	float yPos;
+	float velMag;
+	float frictionForce;
 
 	// UI Items
 

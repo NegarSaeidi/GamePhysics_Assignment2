@@ -15,13 +15,35 @@ const int PPM = 50;
 PlayScene::PlayScene() : rampFriction(0), groundFriction(0.42), mass(12.8), activateButton(false)
 {
 	TextureManager::Instance()->load("../Assets/textures/background.png", "background");
-	
+	PlayScene::start();
 	vertices[0] = glm::vec2(92, 570);
 	vertices[1] = glm::vec2(292, 570);
 	vertices[2] = glm::vec2(92, 420);
+	xPos = 112;
+	yPos = 410;
+	velMag =0.0f;
+	frictionForce = 0.0f;
 	
 
-	PlayScene::start();
+	xPosStr = std::to_string(xPos);
+	yPosStr = std::to_string(yPos);
+	velMagStr = std::to_string(velMag);
+	fForceStr = std::to_string(frictionForce);
+
+	staticKey[0] = new Label("X Position: " + xPosStr, "Consolas", 18, { 179,45,0,255 }, glm::vec2(650.0f, 20.0f));
+	staticKey[0]->setParent(this);
+	addChild(staticKey[0]);
+	staticKey[1] = new Label("Y Position: " + yPosStr, "Consolas", 18, { 179,45,0,255 }, glm::vec2(650.0f, 40.0f));
+	staticKey[1]->setParent(this);
+	addChild(staticKey[1]);
+	staticKey[2] = new Label("Magnitude Velocity: " + velMagStr, "Consolas", 18, { 179,45,0,255 }, glm::vec2(650.0f, 60.0f));
+	staticKey[2]->setParent(this);
+	addChild(staticKey[2]);
+	staticKey[3] = new Label("Friction force: " + fForceStr, "Consolas", 18, {179,45,0,255 }, glm::vec2(650.0f, 80.0f));
+	staticKey[3]->setParent(this);
+	addChild(staticKey[3]);
+
+	
 }
 
 PlayScene::~PlayScene()
@@ -37,7 +59,20 @@ void PlayScene::draw()
 	if(EventManager::Instance().isIMGUIActive())
 	{
 		GUI_Function();
+		xPos = m_pBox->getTransform()->position.x;
+		yPos = m_pBox->getTransform()->position.y;
+		velMag = Util::magnitude(m_pBox->getRigidBody()->velocity);
+		frictionForce = m_pBox->getRigidBody()->mass * rampFriction * 9.8f * cos(Util::Deg2Rad * m_pBox->getCurrentHeading());
+		xPosStr = std::to_string(xPos);
+		yPosStr = std::to_string(yPos);
+		velMagStr = std::to_string(velMag);
+		fForceStr = std::to_string(frictionForce);
 	}
+	
+	staticKey[0]->setText("X Position: " + xPosStr );
+	staticKey[1]->setText("Y Position: " + yPosStr);
+	staticKey[2]->setText("Magnitude Velocity: " + velMagStr);
+	staticKey[3]->setText("Friction force: " + fForceStr);
 
 	drawDisplayList();
 	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);
@@ -133,6 +168,7 @@ void PlayScene::GUI_Function()
 		m_pBox->getTransform()->position = glm::vec2(vertices[2].x + 20, vertices[2].y - 10);
 		m_pBox->setActivated(false);
 		m_pBox->setOnGround(false);
+		m_pBox->getRigidBody()->velocity= glm::vec2(0.0f, 0.0f);
 	}
 	ImGui::Separator();
 
