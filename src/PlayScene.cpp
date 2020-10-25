@@ -15,10 +15,10 @@ const int PPM = 50;
 PlayScene::PlayScene() : rampFriction(0), groundFriction(0.42), mass(12.8), activateButton(false)
 {
 	TextureManager::Instance()->load("../Assets/textures/background.png", "background");
-	PlayScene::start();
 	vertices[0] = glm::vec2(92, 570);
 	vertices[1] = glm::vec2(292, 570);
 	vertices[2] = glm::vec2(92, 420);
+	PlayScene::start();
 	xPos = 112;
 	yPos = 410;
 	velMag =0.0f;
