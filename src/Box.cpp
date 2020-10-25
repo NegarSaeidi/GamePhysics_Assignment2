@@ -38,7 +38,6 @@ void Box::draw()
 	TextureManager::Instance()->draw("box", x, y, m_currentHeading, 255, true);
 }
 
-
 void Box::update()
 {
 	if (activated) {
@@ -87,13 +86,21 @@ void Box::move()
 	float deltaTime = 1.0f / 60.0f;
 	if (onGround)
 	{
-
+		getRigidBody()->acceleration = glm::vec2(-groundFriction * 9.8,0.0);
+		getRigidBody()->velocity.y = 0.0f;
+		
+		if (Util::magnitude(getRigidBody()->velocity) <= 1.0)
+		{
+			std::cout << "Velocity SEFR" << std::endl;
+			getRigidBody()->velocity = glm::vec2(0.0, 0.0);
+			getRigidBody()->acceleration = glm::vec2(0.0, 0.0);
+			activated = false;
+		}
 	}
 	else
 	{
 		float newAcc = 9.8f * sin(Util::Deg2Rad * m_currentHeading) - rampFriction * 9.8f * cos(Util::Deg2Rad * m_currentHeading);
 		getRigidBody()->acceleration = glm::vec2(newAcc* cos(Util::Deg2Rad * m_currentHeading), sin(Util::Deg2Rad * m_currentHeading) * newAcc);
-	
 	}
 	getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
 	getTransform()->position += getRigidBody()->velocity;

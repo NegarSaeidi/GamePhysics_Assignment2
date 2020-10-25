@@ -38,7 +38,6 @@ public:
 	float getRampFriction();
 	bool getOnGround();
 	bool getActivated();
-
 	void setGroundFriction(float gFriction);
 	void setRampFriction(float rFriction);
 	void setOnGround(bool tmp);

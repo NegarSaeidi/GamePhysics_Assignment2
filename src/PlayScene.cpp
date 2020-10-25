@@ -6,11 +6,13 @@
 #include "imgui.h"
 #include "imgui_sdl.h"
 #include "Renderer.h"
+#include "CollisionManager.h"
+
 
 #define PI 3.14159265
 const int PPM = 50;
 
-PlayScene::PlayScene() : rampFriction(0), groundFriction(0.42), mass(12.8)
+PlayScene::PlayScene() : rampFriction(0), groundFriction(0.42), mass(12.8), activateButton(false)
 {
 	TextureManager::Instance()->load("../Assets/textures/background.png", "background");
 	
@@ -43,6 +45,11 @@ void PlayScene::draw()
 
 void PlayScene::update()
 {
+	if (boxCollision())
+	{
+		m_pBox->setOnGround(true);
+		m_pBox->setCurrentHeading(0.0f);
+	}
 	updateDisplayList();
 }
 
@@ -54,9 +61,6 @@ void PlayScene::clean()
 void PlayScene::handleEvents()
 {
 	EventManager::Instance().update();
-
-
-	
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_ESCAPE))
 	{
@@ -95,7 +99,10 @@ void PlayScene::start()
 	m_pBox->getTransform()->position = glm::vec2(vertices[2].x + 20, vertices[2].y - 10);
 
 }
-
+bool PlayScene::boxCollision()
+{
+	return CollisionManager::lineRectCheck(glm::vec2(0, vertices[0].y), glm::vec2(800, vertices[0].y), m_pBox->getTransform()->position, m_pBox->getWidth(), m_pBox->getHeight());
+}
 void PlayScene::GUI_Function() 
 {
 	// Always open with a NewFrame
@@ -110,11 +117,13 @@ void PlayScene::GUI_Function()
 	{
 		std::cout << "Activated" << std::endl;
 		m_pBox->setActivated(true);
+		activateButton = true;
 
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Reset"))
 	{
+		activateButton = false;
 		mass = 12.8;
 		groundFriction = 0.42;
 		rampFriction = 0.0;
@@ -143,7 +152,7 @@ void PlayScene::GUI_Function()
 		float y = vertices[0].y ;
 		vertices[1] = glm::vec2(x , y );
 	}
-	if(!m_pBox->getActivated())
+	if(!activateButton)
 	m_pBox->getTransform()->position = glm::vec2(vertices[2].x+20, vertices[2].y-10 );
 	if (ImGui::SliderFloat("Ramp's Coefficient of Friction", &rampFriction, 0.0f, 1.0f))
 	{

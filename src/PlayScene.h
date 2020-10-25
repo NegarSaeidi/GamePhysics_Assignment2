@@ -21,15 +21,15 @@ public:
 	virtual void clean() override;
 	virtual void handleEvents() override;
 	virtual void start() override;
-
-
+	bool boxCollision();
+	
 private:
 	// IMGUI Function
 	void GUI_Function() ;
 	std::string m_guiTitle;
 	glm::vec2 vertices[3];
 	glm::vec2 m_mousePosition;
-
+	bool activateButton;
 	float triangleHeight, triangleWidth;
 	float groundFriction, rampFriction, mass;
 	bool m_playerFacingRight;
