@@ -10,7 +10,7 @@
 #define PI 3.14159265
 const int PPM = 50;
 
-PlayScene::PlayScene()
+PlayScene::PlayScene() : rampFriction(0), groundFriction(0.42), mass(12.8)
 {
 	TextureManager::Instance()->load("../Assets/textures/background.png", "background");
 	
@@ -76,7 +76,7 @@ void PlayScene::handleEvents()
 
 void PlayScene::start()
 {
-	SoundManager::Instance().playMusic("playscene", -1);
+//	SoundManager::Instance().playMusic("playscene", -1);
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 	
@@ -93,12 +93,6 @@ void PlayScene::start()
 	vertices[1] = glm::vec2(x, y);
 	m_pBox->setCurrentHeading(180 / PI * atan((vertices[0].y - vertices[2].y) / (vertices[1].x - vertices[0].x)));
 	m_pBox->getTransform()->position = glm::vec2(vertices[2].x + 20, vertices[2].y - 10);
-	// Player Sprite
-	/*m_pPlayer = new Player();
-	addChild(m_pPlayer);
-	m_playerFacingRight = true;*/
-
-
 }
 
 void PlayScene::GUI_Function() 
@@ -115,7 +109,17 @@ void PlayScene::GUI_Function()
 	{
 		std::cout << "My Button Pressed" << std::endl;
 	}
-
+	ImGui::SameLine();
+	if (ImGui::Button("Reset"))
+	{
+		mass = 12.8;
+		groundFriction = 0.42;
+		rampFriction = 0.0;
+		vertices[0] = glm::vec2(92, 570);
+		vertices[1] = glm::vec2(292, 570);
+		vertices[2] = glm::vec2(92, 420);
+		m_pBox->getTransform()->position = glm::vec2(vertices[2].x + 20, vertices[2].y - 10);
+	}
 	ImGui::Separator();
 
 	triangleHeight = -(vertices[2].y-vertices[0].y)/PPM;
@@ -135,19 +139,18 @@ void PlayScene::GUI_Function()
 		vertices[1] = glm::vec2(x , y );
 	}
 	m_pBox->getTransform()->position = glm::vec2(vertices[2].x+20, vertices[2].y-10 );
-	if (ImGui::SliderFloat("Ramp's Coefficient Friction", &triangleHeight, 0.0f, 1.0f))
+	if (ImGui::SliderFloat("Ramp's Coefficient of Friction", &rampFriction, 0.0f, 1.0f))
 	{
-		float x = vertices[0].x;
-		float y = vertices[0].y - (triangleHeight * PPM);
-		vertices[2] = glm::vec2(x, y);
+		m_pBox->setRampFriction(rampFriction);
 	}
-	if (ImGui::SliderFloat("Ground's Coefficient Friction", &triangleHeight, 0.0f, 1.0f))
+	if (ImGui::SliderFloat("Ground's Coefficient of Friction", &groundFriction, 0.0f, 1.0f))
 	{
-		float x = vertices[0].x;
-		float y = vertices[0].y - (triangleHeight * PPM);
-		vertices[2] = glm::vec2(x, y);
+		m_pBox->setGroundFriction(groundFriction);
 	}
-
+	if (ImGui::SliderFloat("Mass", &mass, 0.0f, 20.0f))
+	{
+		m_pBox->getRigidBody()->mass = mass;
+	}
 	m_pBox->setCurrentHeading(180 / PI* atan((vertices[0].y-vertices[2].y)/(vertices[1].x-vertices[0].x)));
 	
 	ImGui::End();

@@ -31,6 +31,7 @@ private:
 	glm::vec2 m_mousePosition;
 
 	float triangleHeight, triangleWidth;
+	float groundFriction, rampFriction, mass;
 	bool m_playerFacingRight;
 	Box* m_pBox;
 

@@ -82,7 +82,7 @@ void StartScene::start()
 
 	m_pStartButton->addEventListener(CLICK, [&]()-> void
 	{
-			SoundManager::Instance().playSound("click", 0);
+			//SoundManager::Instance().playSound("click", 0);
 		m_pStartButton->setActive(false);
 		TheGame::Instance()->changeSceneState(PLAY_SCENE);
 	});

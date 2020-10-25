@@ -4,7 +4,7 @@
 #include "TextureManager.h"
 #include "Util.h"
 
-Box::Box() : m_maxSpeed(10.0f)
+Box::Box() : m_maxSpeed(10.0f), rampFriction(0), groundFriction(0.42)
 {
 	TextureManager::Instance()->load("../Assets/textures/box.png","box");
 
@@ -165,4 +165,19 @@ void Box::m_changeDirection()
 
 	glm::vec2 size = TextureManager::Instance()->getTextureSize("ship");
 }
-
+void Box::setRampFriction(float rFriction)
+{
+	rampFriction = rFriction;
+}
+void Box::setGroundFriction(float gFriction)
+{
+	groundFriction = gFriction;
+}
+float Box::getGroundFriction()
+{
+	return groundFriction;
+}
+float Box::getRampFriction()
+{
+	return rampFriction;
+}
