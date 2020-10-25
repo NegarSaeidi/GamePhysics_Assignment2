@@ -23,25 +23,29 @@ PlayScene::PlayScene() : rampFriction(0), groundFriction(0.42), mass(12.8), acti
 	yPos = 410;
 	velMag =0.0f;
 	frictionForce = 0.0f;
-	
+	GfrictionForce = groundFriction * 9.8 * mass;
 
 	xPosStr = std::to_string(xPos);
 	yPosStr = std::to_string(yPos);
 	velMagStr = std::to_string(velMag);
 	fForceStr = std::to_string(frictionForce);
+	GForceStr = std::to_string(GfrictionForce);
 
-	staticKey[0] = new Label("X Position: " + xPosStr, "Consolas", 18, { 179,45,0,255 }, glm::vec2(650.0f, 20.0f));
+	staticKey[0] = new Label("X Position: " + xPosStr, "Consolas", 18, { 179,45,0,255 }, glm::vec2(640.0f, 20.0f));
 	staticKey[0]->setParent(this);
 	addChild(staticKey[0]);
-	staticKey[1] = new Label("Y Position: " + yPosStr, "Consolas", 18, { 179,45,0,255 }, glm::vec2(650.0f, 40.0f));
+	staticKey[1] = new Label("Y Position: " + yPosStr, "Consolas", 18, { 179,45,0,255 }, glm::vec2(640.0f, 40.0f));
 	staticKey[1]->setParent(this);
 	addChild(staticKey[1]);
-	staticKey[2] = new Label("Magnitude Velocity: " + velMagStr, "Consolas", 18, { 179,45,0,255 }, glm::vec2(650.0f, 60.0f));
+	staticKey[2] = new Label("Magnitude Velocity: " + velMagStr, "Consolas", 18, { 179,45,0,255 }, glm::vec2(640.0f, 60.0f));
 	staticKey[2]->setParent(this);
 	addChild(staticKey[2]);
-	staticKey[3] = new Label("Friction force: " + fForceStr, "Consolas", 18, {179,45,0,255 }, glm::vec2(650.0f, 80.0f));
+	staticKey[3] = new Label("Ramp's Friction force: " + fForceStr, "Consolas", 18, {179,45,0,255 }, glm::vec2(640.0f, 80.0f));
 	staticKey[3]->setParent(this);
 	addChild(staticKey[3]);
+	staticKey[4] = new Label("Ground's Friction force: " + GForceStr, "Consolas", 18, { 179,45,0,255 }, glm::vec2(640.0f, 100.0f));
+	staticKey[4]->setParent(this);
+	addChild(staticKey[4]);
 
 	
 }
@@ -63,16 +67,19 @@ void PlayScene::draw()
 		yPos = m_pBox->getTransform()->position.y;
 		velMag = Util::magnitude(m_pBox->getRigidBody()->velocity);
 		frictionForce = m_pBox->getRigidBody()->mass * rampFriction * 9.8f * cos(Util::Deg2Rad * m_pBox->getCurrentHeading());
+		GfrictionForce = groundFriction * 9.8 * mass;
 		xPosStr = std::to_string(xPos);
 		yPosStr = std::to_string(yPos);
 		velMagStr = std::to_string(velMag);
 		fForceStr = std::to_string(frictionForce);
+		GForceStr = std::to_string(GfrictionForce);
 	}
 	
 	staticKey[0]->setText("X Position: " + xPosStr );
 	staticKey[1]->setText("Y Position: " + yPosStr);
 	staticKey[2]->setText("Magnitude Velocity: " + velMagStr);
-	staticKey[3]->setText("Friction force: " + fForceStr);
+	staticKey[3]->setText("Ramp's Friction force: " + fForceStr);
+	staticKey[4]->setText("Ground's Friction force: " + GForceStr);
 
 	drawDisplayList();
 	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);
