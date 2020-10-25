@@ -111,7 +111,7 @@ void PlayScene::GUI_Function()
 	
 	ImGui::Begin("Your Window Title Goes Here", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
 
-	if(ImGui::Button("My Button"))
+	if(ImGui::Button("Activate"))
 	{
 		std::cout << "My Button Pressed" << std::endl;
 	}
@@ -135,6 +135,18 @@ void PlayScene::GUI_Function()
 		vertices[1] = glm::vec2(x , y );
 	}
 	m_pBox->getTransform()->position = glm::vec2(vertices[2].x+20, vertices[2].y-10 );
+	if (ImGui::SliderFloat("Ramp's Coefficient Friction", &triangleHeight, 0.0f, 1.0f))
+	{
+		float x = vertices[0].x;
+		float y = vertices[0].y - (triangleHeight * PPM);
+		vertices[2] = glm::vec2(x, y);
+	}
+	if (ImGui::SliderFloat("Ground's Coefficient Friction", &triangleHeight, 0.0f, 1.0f))
+	{
+		float x = vertices[0].x;
+		float y = vertices[0].y - (triangleHeight * PPM);
+		vertices[2] = glm::vec2(x, y);
+	}
 
 	m_pBox->setCurrentHeading(180 / PI* atan((vertices[0].y-vertices[2].y)/(vertices[1].x-vertices[0].x)));
 	
