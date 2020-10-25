@@ -33,10 +33,16 @@ public:
 	void setCurrentDirection(glm::vec2 newDirection);
 	void setCurrentHeading(float newDirection);
 	void setMaxSpeed(float newSpeed);
+
 	float getGroundFriction();
 	float getRampFriction();
+	bool getOnGround();
+	bool getActivated();
+
 	void setGroundFriction(float gFriction);
 	void setRampFriction(float rFriction);
+	void setOnGround(bool tmp);
+	void setActivated(bool tmp);
 private:
 	void m_checkBounds();
 	void m_reset();
@@ -45,7 +51,8 @@ private:
 	float m_maxSpeed;
 	float m_turnRate;
 	float groundFriction, rampFriction;
-
+	bool onGround;
+	bool activated;
 	void m_changeDirection();
 	float m_currentHeading;
 	glm::vec2 m_currentDirection;

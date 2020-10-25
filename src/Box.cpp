@@ -21,6 +21,7 @@ Box::Box() : m_maxSpeed(10.0f), rampFriction(0), groundFriction(0.42)
 	m_currentHeading = 20.0f; // current facing angle
 	m_currentDirection = glm::vec2(1.0f, 0.0f); // facing right
 	m_turnRate = 5.0f; // 5 degrees per frame
+	onGround = false;
 }
 
 
@@ -40,8 +41,10 @@ void Box::draw()
 
 void Box::update()
 {
-	move();
-	m_checkBounds();
+	if (activated) {
+		move();
+		m_checkBounds();
+	}
 }
 
 void Box::clean()
@@ -81,8 +84,20 @@ void Box::moveBack()
 
 void Box::move()
 {
+	float deltaTime = 1.0f / 60.0f;
+	if (onGround)
+	{
+
+	}
+	else
+	{
+		float newAcc = 9.8f * sin(Util::Deg2Rad * m_currentHeading) - rampFriction * 9.8f * cos(Util::Deg2Rad * m_currentHeading);
+		getRigidBody()->acceleration = glm::vec2(newAcc* cos(Util::Deg2Rad * m_currentHeading), sin(Util::Deg2Rad * m_currentHeading) * newAcc);
+	
+	}
+	getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
 	getTransform()->position += getRigidBody()->velocity;
-	getRigidBody()->velocity *= 0.9f;
+	//getRigidBody()->velocity *= 0.9f;
 }
 
 glm::vec2 Box::getTargetPosition() const
@@ -169,6 +184,14 @@ void Box::setRampFriction(float rFriction)
 {
 	rampFriction = rFriction;
 }
+void Box::setOnGround(bool tmp)
+{
+	onGround = tmp;
+}
+void Box::setActivated(bool tmp)
+{
+	activated = tmp;
+}
 void Box::setGroundFriction(float gFriction)
 {
 	groundFriction = gFriction;
@@ -180,4 +203,14 @@ float Box::getGroundFriction()
 float Box::getRampFriction()
 {
 	return rampFriction;
+}
+
+bool Box::getOnGround()
+{
+	return onGround;
+}
+
+bool Box::getActivated()
+{
+	return activated;
 }

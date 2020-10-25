@@ -93,6 +93,7 @@ void PlayScene::start()
 	vertices[1] = glm::vec2(x, y);
 	m_pBox->setCurrentHeading(180 / PI * atan((vertices[0].y - vertices[2].y) / (vertices[1].x - vertices[0].x)));
 	m_pBox->getTransform()->position = glm::vec2(vertices[2].x + 20, vertices[2].y - 10);
+
 }
 
 void PlayScene::GUI_Function() 
@@ -107,7 +108,9 @@ void PlayScene::GUI_Function()
 
 	if(ImGui::Button("Activate"))
 	{
-		std::cout << "My Button Pressed" << std::endl;
+		std::cout << "Activated" << std::endl;
+		m_pBox->setActivated(true);
+
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Reset"))
@@ -119,6 +122,8 @@ void PlayScene::GUI_Function()
 		vertices[1] = glm::vec2(292, 570);
 		vertices[2] = glm::vec2(92, 420);
 		m_pBox->getTransform()->position = glm::vec2(vertices[2].x + 20, vertices[2].y - 10);
+		m_pBox->setActivated(false);
+		m_pBox->setOnGround(false);
 	}
 	ImGui::Separator();
 
@@ -138,6 +143,7 @@ void PlayScene::GUI_Function()
 		float y = vertices[0].y ;
 		vertices[1] = glm::vec2(x , y );
 	}
+	if(!m_pBox->getActivated())
 	m_pBox->getTransform()->position = glm::vec2(vertices[2].x+20, vertices[2].y-10 );
 	if (ImGui::SliderFloat("Ramp's Coefficient of Friction", &rampFriction, 0.0f, 1.0f))
 	{
