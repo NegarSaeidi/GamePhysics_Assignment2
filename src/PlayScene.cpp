@@ -101,7 +101,7 @@ void PlayScene::start()
 }
 bool PlayScene::boxCollision()
 {
-	return CollisionManager::lineRectCheck(glm::vec2(0, vertices[0].y), glm::vec2(800, vertices[0].y), m_pBox->getTransform()->position, m_pBox->getWidth(), m_pBox->getHeight());
+	return CollisionManager::lineRectCheck(glm::vec2(0, vertices[1].y), glm::vec2(800, vertices[1].y), m_pBox->getTransform()->position, 20,20);
 }
 void PlayScene::GUI_Function() 
 {
@@ -166,6 +166,7 @@ void PlayScene::GUI_Function()
 	{
 		m_pBox->getRigidBody()->mass = mass;
 	}
+	if(!activateButton)
 	m_pBox->setCurrentHeading(180 / PI* atan((vertices[0].y-vertices[2].y)/(vertices[1].x-vertices[0].x)));
 	
 	ImGui::End();

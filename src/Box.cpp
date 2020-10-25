@@ -17,7 +17,7 @@ Box::Box() : m_maxSpeed(10.0f), rampFriction(0), groundFriction(0.42)
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->isColliding = false;
 	setType(SHIP);
-	
+	getRigidBody()->mass = 12.8;
 	m_currentHeading = 20.0f; // current facing angle
 	m_currentDirection = glm::vec2(1.0f, 0.0f); // facing right
 	m_turnRate = 5.0f; // 5 degrees per frame
@@ -33,7 +33,10 @@ void Box::draw()
 	// alias for x and y
 	const auto x = getTransform()->position.x;
 	const auto y = getTransform()->position.y;
-
+	if (m_currentHeading)
+	{
+		std::cout << "Zeroo" << std::endl;
+	}
 	// draw the ship
 	TextureManager::Instance()->draw("box", x, y, m_currentHeading, 255, true);
 }
@@ -42,7 +45,7 @@ void Box::update()
 {
 	if (activated) {
 		move();
-		m_checkBounds();
+		
 	}
 }
 
@@ -83,27 +86,31 @@ void Box::moveBack()
 
 void Box::move()
 {
-	float deltaTime = 1.0f / 60.0f;
-	if (onGround)
-	{
-		getRigidBody()->acceleration = glm::vec2(-groundFriction * 9.8,0.0);
-		getRigidBody()->velocity.y = 0.0f;
-		
-		if (Util::magnitude(getRigidBody()->velocity) <= 1.0)
+	float frictionForce = getRigidBody()->mass * rampFriction * 9.8f * cos(Util::Deg2Rad * m_currentHeading);
+		float deltaTime = 1.0f / 60.0f;
+		if (onGround)
 		{
-			std::cout << "Velocity SEFR" << std::endl;
-			getRigidBody()->velocity = glm::vec2(0.0, 0.0);
-			getRigidBody()->acceleration = glm::vec2(0.0, 0.0);
-			activated = false;
+			getRigidBody()->acceleration = glm::vec2(-groundFriction * 9.8, 0.0);
+			getRigidBody()->velocity.y = 0.0f;
+
+			if (Util::magnitude(getRigidBody()->velocity) <= 1.0)
+			{
+				std::cout << "Velocity SEFR" << std::endl;
+				getRigidBody()->velocity = glm::vec2(0.0, 0.0);
+				getRigidBody()->acceleration = glm::vec2(0.0, 0.0);
+				activated = false;
+			}
 		}
-	}
-	else
-	{
-		float newAcc = 9.8f * sin(Util::Deg2Rad * m_currentHeading) - rampFriction * 9.8f * cos(Util::Deg2Rad * m_currentHeading);
-		getRigidBody()->acceleration = glm::vec2(newAcc* cos(Util::Deg2Rad * m_currentHeading), sin(Util::Deg2Rad * m_currentHeading) * newAcc);
-	}
-	getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
-	getTransform()->position += getRigidBody()->velocity;
+		else
+		{
+			if ((9.8f * sin(Util::Deg2Rad * m_currentHeading) * getRigidBody()->mass) > frictionForce) {
+				float newAcc = 9.8f * sin(Util::Deg2Rad * m_currentHeading) - rampFriction * 9.8f * cos(Util::Deg2Rad * m_currentHeading);
+				getRigidBody()->acceleration = glm::vec2(newAcc * cos(Util::Deg2Rad * m_currentHeading), sin(Util::Deg2Rad * m_currentHeading) * newAcc);
+			}
+		}
+		getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
+		getTransform()->position += getRigidBody()->velocity;
+	
 	//getRigidBody()->velocity *= 0.9f;
 }
 
