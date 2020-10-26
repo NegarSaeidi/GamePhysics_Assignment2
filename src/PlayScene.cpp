@@ -71,6 +71,7 @@ void PlayScene::draw()
 		xPosStr = std::to_string(xPos);
 		yPosStr = std::to_string(yPos);
 		velMagStr = std::to_string(velMag);
+		if(m_pBox->getCurrentHeading()!=0.0f)
 		fForceStr = std::to_string(frictionForce);
 		GForceStr = std::to_string(GfrictionForce);
 	}
