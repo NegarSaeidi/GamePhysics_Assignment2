@@ -122,7 +122,7 @@ void PlayScene::handleEvents()
 
 void PlayScene::start()
 {
-//	SoundManager::Instance().playMusic("playscene", -1);
+	SoundManager::Instance().playMusic("playscene", -1);
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 	
@@ -176,6 +176,9 @@ void PlayScene::GUI_Function()
 		m_pBox->setActivated(false);
 		m_pBox->setOnGround(false);
 		m_pBox->getRigidBody()->velocity= glm::vec2(0.0f, 0.0f);
+		m_pBox->setRampFriction(rampFriction);
+		m_pBox->setGroundFriction(groundFriction);
+		m_pBox->getRigidBody()->mass = mass;
 	}
 	ImGui::Separator();
 

@@ -103,7 +103,7 @@ bool Game::init(const char* title, const int x, const int y, const int width, co
 
 void Game::start()
 {
-	//SoundManager::Instance().playMusic("start", -1);
+	SoundManager::Instance().playMusic("start", -1);
 	m_currentSceneState = NO_SCENE;
 
 	changeSceneState(START_SCENE);
